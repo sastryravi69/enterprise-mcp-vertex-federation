@@ -107,7 +107,7 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
         Box(
             id="banner",
             label="Hybrid Edge-to-Cloud Zero-Trust Agentic AI Blueprint (GCC Reference Architecture)",
-            sublabel="Legacy On-Premises (Tally / Oracle / CRM)  ->  Azure Databricks (Zero-Copy Layer)  ->  GCP Vertex AI & Salesforce Agentforce",
+            sublabel="Legacy On-Premises (Oracle / CRM)  ->  Azure Databricks (Zero-Copy Layer)  ->  GCP Vertex AI & Salesforce Agentforce",
             x=24,
             y=16,
             w=1772,
@@ -186,41 +186,15 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
             bold=True,
         ),
         Box(
-            id="tally_erp",
-            label="Tally Prime ERP",
-            sublabel="XML / ODBC Connector\nLedgers, GST, Invoices",
-            x=44,
-            y=236,
-            w=176,
-            h=92,
-            fill="#fee2e2",
-            stroke="#b91c1c",
-            is_db=True,
-            bold=True,
-        ),
-        Box(
             id="oracle_db",
             label="Oracle DB 19c / 23ai",
             sublabel="GoldenGate / LogMiner CDC\nCore ERP & Financials",
-            x=240,
+            x=44,
             y=236,
-            w=180,
+            w=376,
             h=92,
             fill="#fee2e2",
             stroke="#b91c1c",
-            is_db=True,
-            bold=True,
-        ),
-        Box(
-            id="legacy_crm",
-            label="Legacy On-Prem CRM (Mock PoC DB)",
-            sublabel="Customers (PAN/Tax ID, Email, Phone), Deals, Support Tickets + Secrets",
-            x=44,
-            y=352,
-            w=376,
-            h=92,
-            fill="#fecaca",
-            stroke="#991b1b",
             is_db=True,
             bold=True,
         ),
@@ -229,11 +203,24 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
             label="Azure Arc + Self-Hosted IR / CDC Agent",
             sublabel="Outbound Encrypted Delta Stream | Zero Inbound Firewall Ports\nFeeds Schema Metadata & Masked CDC Events to Azure",
             x=44,
-            y=470,
+            y=352,
             w=376,
             h=78,
             fill="#fef3c7",
             stroke="#d97706",
+            bold=True,
+        ),
+        Box(
+            id="legacy_crm",
+            label="Legacy On-Prem CRM (Mock PoC DB)",
+            sublabel="Customers (PAN/Tax ID, Email, Phone), Deals, Support Tickets + Secrets",
+            x=44,
+            y=454,
+            w=376,
+            h=92,
+            fill="#fecaca",
+            stroke="#991b1b",
+            is_db=True,
             bold=True,
         ),
         Box(
@@ -356,7 +343,7 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
         Box(
             id="lakehouse_fed",
             label="Lakehouse Federation",
-            sublabel="Federated live queries to Oracle & Tally metadata without raw data copy",
+            sublabel="Federated live queries to Oracle metadata without raw data copy",
             x=512,
             y=476,
             w=388,
@@ -623,7 +610,7 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
             id="legend",
             label="Architecture Flow Legend",
             sublabel=(
-                "[1] Amber: Edge CDC / Lakehouse Federation (Tally & Oracle -> Databricks)    "
+                "[1] Amber: Edge CDC / Lakehouse Federation (Oracle -> Databricks)    "
                 "[2] Blue Dashed: Zero-Copy Delta Sharing / Iceberg Uniform (No ETL Duplication)    "
                 "[3] Emerald: Zero-Trust Private MCP over mTLS (Tokenized PII Only)    "
                 "[4] Gold/Green: FinOps Tiered Routing (Flash 85% / Pro 15%)    "
@@ -641,35 +628,34 @@ def build_diagram_elements() -> tuple[list[Box], list[Edge]]:
     ]
 
     edges: list[Edge] = [
-        # Tally & Oracle -> Edge CDC
-        Edge("e1", "tally_erp", "edge_cdc", "1a. XML/ODBC CDC", "#d97706", exit_x=0.5, exit_y=1.0, entry_x=0.25, entry_y=0.0),
-        Edge("e2", "oracle_db", "edge_cdc", "1b. LogMiner CDC", "#d97706", exit_x=0.5, exit_y=1.0, entry_x=0.75, entry_y=0.0),
+        # Oracle -> Edge CDC
+        Edge("e1", "oracle_db", "edge_cdc", "1a. LogMiner CDC", "#d97706", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
         # Legacy CRM -> MCP Gateway (local enclave)
-        Edge("e3", "legacy_crm", "mcp_gateway", "Local SQLite/DB Enclave", "#0f766e", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e2", "legacy_crm", "mcp_gateway", "Local SQLite/DB Enclave", "#0f766e", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
         # Edge CDC -> Private Link -> ADLS Gen2
-        Edge("e4", "edge_cdc", "priv_link_edge", "1c. Encrypted Outbound CDC", "#d97706", exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5),
-        Edge("e5", "priv_link_edge", "adls_medallion", "CMEK Ingest", "#1d4ed8", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e3", "edge_cdc", "priv_link_edge", "1b. Encrypted Outbound CDC", "#d97706", exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5),
+        Edge("e4", "priv_link_edge", "adls_medallion", "CMEK Ingest", "#1d4ed8", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
         # ADLS -> Unity Catalog / Federation
-        Edge("e6", "adls_medallion", "lakehouse_fed", "Medallion Gold", "#1d4ed8", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
-        Edge("e7", "oracle_db", "lakehouse_fed", "2a. Zero-Copy Federation", "#2563eb", dashed=True, exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5, waypoints=((456, 282), (456, 509))),
+        Edge("e5", "adls_medallion", "lakehouse_fed", "Medallion Gold", "#1d4ed8", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e6", "oracle_db", "lakehouse_fed", "2a. Zero-Copy Federation", "#2563eb", dashed=True, exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5, waypoints=((456, 282), (456, 509))),
         # Delta Sharing -> Vertex AI & Salesforce Data Cloud (Zero-Copy)
-        Edge("e8", "delta_sharing", "vertex_bridge", "2b. Zero-Copy Delta Sharing", "#2563eb", dashed=True, exit_x=1.0, exit_y=0.35, entry_x=0.0, entry_y=0.5, waypoints=((956, 670), (956, 533))),
-        Edge("e9", "delta_sharing", "sf_data_cloud", "2c. Zero-Copy Data Cloud", "#0284c7", dashed=True, exit_x=1.0, exit_y=0.75, entry_x=0.0, entry_y=0.5, waypoints=((956, 703), (956, 746))),
+        Edge("e7", "delta_sharing", "vertex_bridge", "2b. Zero-Copy Delta Sharing", "#2563eb", dashed=True, exit_x=1.0, exit_y=0.35, entry_x=0.0, entry_y=0.5, waypoints=((956, 670), (956, 533))),
+        Edge("e8", "delta_sharing", "sf_data_cloud", "2c. Zero-Copy Data Cloud", "#0284c7", dashed=True, exit_x=1.0, exit_y=0.75, entry_x=0.0, entry_y=0.5, waypoints=((956, 703), (956, 746))),
         # Vertex Bridge <-> Zero-Trust MCP Gateway (Private mTLS)
-        Edge("e10", "vertex_bridge", "mcp_gateway", "3. Private MCP (mTLS, Tokenized Only)", "#047857", bidirectional=True, exit_x=0.0, exit_y=0.7, entry_x=1.0, entry_y=0.5, waypoints=((950, 548), (950, 962), (456, 962), (456, 756))),
+        Edge("e9", "vertex_bridge", "mcp_gateway", "3. Private MCP (mTLS, Tokenized Only)", "#047857", bidirectional=True, exit_x=0.0, exit_y=0.7, entry_x=1.0, entry_y=0.5, waypoints=((950, 548), (950, 962), (456, 962), (456, 756))),
         # FinOps Router -> Flash & Pro
-        Edge("e11", "finops_router", "gemini_flash", "4a. Simple (85%)", "#15803d", exit_x=0.25, exit_y=1.0, entry_x=0.5, entry_y=0.0),
-        Edge("e12", "finops_router", "gemini_pro", "4b. Complex (15%)", "#166534", exit_x=0.75, exit_y=1.0, entry_x=0.5, entry_y=0.0),
-        Edge("e13", "gemini_flash", "vertex_bridge", "Tool Calls", "#15803d", bidirectional=True, exit_x=0.5, exit_y=1.0, entry_x=0.25, entry_y=0.0),
-        Edge("e14", "gemini_pro", "vertex_bridge", "Reasoning", "#166534", bidirectional=True, exit_x=0.5, exit_y=1.0, entry_x=0.75, entry_y=0.0),
+        Edge("e10", "finops_router", "gemini_flash", "4a. Simple (85%)", "#15803d", exit_x=0.25, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e11", "finops_router", "gemini_pro", "4b. Complex (15%)", "#166534", exit_x=0.75, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e12", "gemini_flash", "vertex_bridge", "Tool Calls", "#15803d", bidirectional=True, exit_x=0.5, exit_y=1.0, entry_x=0.25, entry_y=0.0),
+        Edge("e13", "gemini_pro", "vertex_bridge", "Reasoning", "#166534", bidirectional=True, exit_x=0.5, exit_y=1.0, entry_x=0.75, entry_y=0.0),
         # Salesforce internal & Private Connect -> Vertex AI
-        Edge("e15", "sf_data_cloud", "einstein_trust", "Grounded Context", "#0891b2", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
-        Edge("e16", "einstein_trust", "agentforce_atlas", "Policy Checked", "#0284c7", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
-        Edge("e17", "agentforce_atlas", "finops_router", "5. Private Connect (JWT/mTLS)", "#0e7490", bidirectional=True, exit_x=1.0, exit_y=0.5, entry_x=1.0, entry_y=0.5, waypoints=((1458, 905), (1458, 338))),
+        Edge("e14", "sf_data_cloud", "einstein_trust", "Grounded Context", "#0891b2", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e15", "einstein_trust", "agentforce_atlas", "Policy Checked", "#0284c7", exit_x=0.5, exit_y=1.0, entry_x=0.5, entry_y=0.0),
+        Edge("e16", "agentforce_atlas", "finops_router", "5. Private Connect (JWT/mTLS)", "#0e7490", bidirectional=True, exit_x=1.0, exit_y=0.5, entry_x=1.0, entry_y=0.5, waypoints=((1458, 905), (1458, 338))),
         # Outputs to Personas
-        Edge("e18", "gemini_pro", "persona_fin", "Strategic Briefs", "#6d28d9", exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5),
-        Edge("e19", "gemini_flash", "persona_noc", "Fast Triage", "#4338ca", exit_x=1.0, exit_y=0.8, entry_x=0.0, entry_y=0.5, waypoints=((1452, 460), (1452, 469))),
-        Edge("e20", "agentforce_atlas", "persona_rep", "Agentforce Actions", "#0369a1", exit_x=1.0, exit_y=0.7, entry_x=0.0, entry_y=0.5, waypoints=((1464, 919), (1464, 789))),
+        Edge("e17", "gemini_pro", "persona_fin", "Strategic Briefs", "#6d28d9", exit_x=1.0, exit_y=0.5, entry_x=0.0, entry_y=0.5),
+        Edge("e18", "gemini_flash", "persona_noc", "Fast Triage", "#4338ca", exit_x=1.0, exit_y=0.8, entry_x=0.0, entry_y=0.5, waypoints=((1452, 460), (1452, 469))),
+        Edge("e19", "agentforce_atlas", "persona_rep", "Agentforce Actions", "#0369a1", exit_x=1.0, exit_y=0.7, entry_x=0.0, entry_y=0.5, waypoints=((1464, 919), (1464, 789))),
     ]
     return boxes, edges
 

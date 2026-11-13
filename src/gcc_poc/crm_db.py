@@ -105,7 +105,7 @@ SEED_DEALS = [
 
 SEED_TICKETS = [
     ("T-9001", "C-101", "P1", "Escalated", "Data Residency", "Audit alert: outbound payload verification required for RBI compliance; contact r.iyer@bharatfin.in requested trace.", "SECRET_NOTE: Prod Oracle password rotated by Ramesh on 10.24.8.19; PAN AAACB1234F verified.", 1, "2026-11-08T09:15:00Z"),
-    ("T-9002", "C-101", "P2", "Open", "Latency", "Batch sync from Tally XML connector spiking above 45s during market close.", "DBA ticket #4412 assigned to Bangalore NOC; call +91-98201-44120 after patch.", 0, "2026-11-09T14:20:00Z"),
+    ("T-9002", "C-101", "P2", "Open", "Latency", "Batch sync from ERP XML connector spiking above 45s during market close.", "DBA ticket #4412 assigned to Bangalore NOC; call +91-98201-44120 after patch.", 0, "2026-11-09T14:20:00Z"),
     ("T-9003", "C-102", "P1", "Escalated", "Connector Failure", "Oracle CDC GoldenGate lag > 4 hours affecting EMEA billing dashboard; Lukas Weber (+49-171-8834201) escalated to VP.", "Internal escalation: customer threatening non-renewal of $980k deal D-2003 unless SLA credit issued.", 1, "2026-11-07T07:45:00Z"),
     ("T-9004", "C-102", "P1", "Open", "Auth Token", "Workload Identity OIDC token refresh failed intermittently on Frankfurt private endpoint.", "Vault token lease TTL misconfigured at 15m; key alias DE-298471022.", 1, "2026-11-10T11:10:00Z"),
     ("T-9005", "C-103", "P2", "Resolved", "Masking Policy", "HIPAA SSN pattern check requested on clinical notes export pipeline.", "Verified zero raw PHI leaves enclave.", 0, "2026-11-01T16:00:00Z"),

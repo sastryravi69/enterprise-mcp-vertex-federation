@@ -41,7 +41,6 @@ def test_blueprint_generation_xml_and_zero_overlaps() -> None:
 
     # Ensure all required enterprise systems are mapped in the Draw.io diagram
     for required_term in (
-        "Tally Prime",
         "Oracle DB",
         "Azure Databricks",
         "Unity Catalog",
@@ -55,4 +54,6 @@ def test_blueprint_generation_xml_and_zero_overlaps() -> None:
         "Zero-Trust MCP Gateway",
     ):
         assert required_term in xml_text
+
+    assert "Tally" not in xml_text
 

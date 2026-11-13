@@ -26,7 +26,7 @@ A three-part enterprise proof-of-concept demonstrating how Global Capability Cen
 ### 3. The Hybrid Edge-to-Cloud Blueprint (Architecture Flex)
 - **Files:** [`architecture/hybrid_edge_to_cloud_blueprint.drawio`](architecture/hybrid_edge_to_cloud_blueprint.drawio), [`architecture/hybrid_edge_to_cloud_blueprint.svg`](architecture/hybrid_edge_to_cloud_blueprint.svg), [`architecture/ARCHITECTURE_NOTES.md`](architecture/ARCHITECTURE_NOTES.md), [`scripts/generate_blueprint.py`](scripts/generate_blueprint.py)
 - Native **Draw.io XML** diagram mapping:
-  1. **Zone 1 (On-Prem GCC Enclave)**: Tally Prime + Oracle DB 19c/23ai + Legacy CRM + Azure Arc/SHIR + Zero-Trust MCP Gateway.
+  1. **Zone 1 (On-Prem GCC Enclave)**: Oracle DB + Legacy CRM + Azure Arc/SHIR + Zero-Trust MCP Gateway.
   2. **Zone 2 (Azure Databricks Zero-Copy Layer)**: ExpressRoute/Private Link -> ADLS Gen2 Medallion -> Unity Catalog (Lakehouse Federation, RLS/Masking, **Delta Sharing / Iceberg Uniform** Zero-Copy).
   3. **Zone 3 (GCP Vertex AI & FinOps)**: VPC-SC + Private Service Connect (ZDR) -> Python LLM Router -> Gemini 1.5 Flash & Pro + Vertex AI MCP Bridge.
   4. **Zone 4 (Salesforce Agentforce)**: Data Cloud Zero-Copy Federation + Einstein Trust Layer + Agentforce Atlas Reasoning via Private Connect.
