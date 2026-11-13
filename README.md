@@ -1,10 +1,10 @@
-# Zero-Trust GCC Agentic AI PoC
+# Zero-Trust Agentic AI PoC
 
 A three-part enterprise proof-of-concept demonstrating how Global Capability Centers (GCCs) can deploy **Agentic AI** on proprietary CRM/ERP data **without moving raw data or exposing PII to public LLMs**, while optimizing token spend by **~80%+** through tiered model routing.
 
 ---
 
-## Deliverables Overview
+## Overview
 
 ### 1. The "Zero-Trust" MCP Gateway (Data Privacy Flex)
 - **Files:** `src/gcc_poc/crm_db.py`, `src/gcc_poc/mcp_gateway/{server.py,privacy.py,policy.py,audit.py}`, `src/gcc_poc/vertex_bridge.py`
