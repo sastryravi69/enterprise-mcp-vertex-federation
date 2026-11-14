@@ -10,6 +10,8 @@ Also runs geometric overlap validation on sibling components and XML integrity c
 from __future__ import annotations
 
 import html
+import shutil
+import subprocess
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,6 +20,8 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 ARCH_DIR = ROOT_DIR / "architecture"
 DRAWIO_PATH = ARCH_DIR / "hybrid_edge_to_cloud_blueprint.drawio"
 SVG_PATH = ARCH_DIR / "hybrid_edge_to_cloud_blueprint.svg"
+PNG_PATH = ARCH_DIR / "hybrid_edge_to_cloud_blueprint.png"
+HIGHRES_PNG_PATH = ARCH_DIR / "hybrid_edge_to_cloud_blueprint_highres.png"
 
 
 @dataclass
@@ -824,6 +828,41 @@ def generate_svg(boxes: list[Box], edges: list[Edge]) -> str:
     return "\n".join(lines)
 
 
+def find_headless_browser() -> Path | None:
+    for name in ("google-chrome", "chromium", "chromium-browser", "chrome", "msedge"):
+        found = shutil.which(name)
+        if found:
+            return Path(found)
+    candidates = [
+        Path(r"C:\Program Files\Google\Chrome\Application\chrome.exe"),
+        Path(r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"),
+        Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
+        Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"),
+    ]
+    return next((p for p in candidates if p.exists()), None)
+
+
+def export_png(svg_path: Path, png_path: Path, scale: int = 1) -> bool:
+    browser = find_headless_browser()
+    if not browser:
+        return False
+    cmd = [
+        str(browser),
+        "--headless=new",
+        f"--screenshot={png_path.resolve()}",
+        "--window-size=1840,1080",
+        "--default-background-color=ffffffff",
+        f"--force-device-scale-factor={scale}",
+        "--hide-scrollbars",
+        svg_path.resolve().as_uri(),
+    ]
+    try:
+        proc = subprocess.run(cmd, capture_output=True, timeout=30)
+        return proc.returncode == 0 and png_path.exists()
+    except Exception:
+        return False
+
+
 def main() -> None:
     ARCH_DIR.mkdir(parents=True, exist_ok=True)
     boxes, edges = build_diagram_elements()
@@ -834,7 +873,15 @@ def main() -> None:
 
     svg_text = generate_svg(boxes, edges)
     SVG_PATH.write_text(svg_text, encoding="utf-8")
-    print(f"Generated {DRAWIO_PATH} and {SVG_PATH} ({len(boxes)} nodes, {len(edges)} flows).")
+
+    std_ok = export_png(SVG_PATH, PNG_PATH, scale=1)
+    high_ok = export_png(SVG_PATH, HIGHRES_PNG_PATH, scale=2)
+    png_msg = ""
+    if std_ok:
+        png_msg += f", {PNG_PATH}"
+    if high_ok:
+        png_msg += f", {HIGHRES_PNG_PATH}"
+    print(f"Generated {DRAWIO_PATH}, {SVG_PATH}{png_msg} ({len(boxes)} nodes, {len(edges)} flows).")
 
 
 if __name__ == "__main__":

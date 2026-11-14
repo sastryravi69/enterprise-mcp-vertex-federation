@@ -24,7 +24,7 @@ A three-part enterprise proof-of-concept demonstrating how Global Capability Cen
 - **20-Prompt Enterprise FinOps Simulator**: Benchmarks a realistic 85% Flash / 15% Pro GCC query distribution and calculates per-query savings (66.0% blended / 94.0% on Flash tier), latency reduction (65.7% faster), and projected annual run-rate savings at `500,000 queries/month`.
 
 ### 3. The Hybrid Edge-to-Cloud Blueprint (Architecture Flex)
-- **Files:** [`architecture/hybrid_edge_to_cloud_blueprint.drawio`](architecture/hybrid_edge_to_cloud_blueprint.drawio), [`architecture/hybrid_edge_to_cloud_blueprint.svg`](architecture/hybrid_edge_to_cloud_blueprint.svg), [`architecture/ARCHITECTURE_NOTES.md`](architecture/ARCHITECTURE_NOTES.md), [`scripts/generate_blueprint.py`](scripts/generate_blueprint.py)
+- **Files:** [`architecture/hybrid_edge_to_cloud_blueprint.drawio`](architecture/hybrid_edge_to_cloud_blueprint.drawio), [`architecture/hybrid_edge_to_cloud_blueprint.svg`](architecture/hybrid_edge_to_cloud_blueprint.svg), [`architecture/hybrid_edge_to_cloud_blueprint.png`](architecture/hybrid_edge_to_cloud_blueprint.png) ([High-Res 4K version for social media](architecture/hybrid_edge_to_cloud_blueprint_highres.png)), [`architecture/ARCHITECTURE_NOTES.md`](architecture/ARCHITECTURE_NOTES.md), [`scripts/generate_blueprint.py`](scripts/generate_blueprint.py)
 - Native **Draw.io XML** diagram mapping:
   1. **Zone 1 (On-Prem GCC Enclave)**: Oracle DB + Legacy CRM + Azure Arc/SHIR + Zero-Trust MCP Gateway.
   2. **Zone 2 (Azure Databricks Zero-Copy Layer)**: ExpressRoute/Private Link -> ADLS Gen2 Medallion -> Unity Catalog (Lakehouse Federation, RLS/Masking, **Delta Sharing / Iceberg Uniform** Zero-Copy).

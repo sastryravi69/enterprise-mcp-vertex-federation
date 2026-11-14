@@ -1,6 +1,6 @@
 # Hybrid Edge-to-Cloud Architecture Notes
 
-This document accompanies [`hybrid_edge_to_cloud_blueprint.drawio`](./hybrid_edge_to_cloud_blueprint.drawio) and [`hybrid_edge_to_cloud_blueprint.svg`](./hybrid_edge_to_cloud_blueprint.svg).
+This document accompanies [`hybrid_edge_to_cloud_blueprint.drawio`](./hybrid_edge_to_cloud_blueprint.drawio), [`hybrid_edge_to_cloud_blueprint.svg`](./hybrid_edge_to_cloud_blueprint.svg), and [`hybrid_edge_to_cloud_blueprint.png`](./hybrid_edge_to_cloud_blueprint.png) ([High-Res version](./hybrid_edge_to_cloud_blueprint_highres.png)).
 
 ## Design Principles for GCC Adoption
 
